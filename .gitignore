@@ -1,0 +1,15 @@
+# dependencies
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# production
+/plugin
+
+
+styled-system
+styled-system-static
