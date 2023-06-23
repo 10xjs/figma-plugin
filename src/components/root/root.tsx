@@ -1,8 +1,17 @@
-import { css } from 'styled-system/css';
-import { ResizeHandle } from '../resize-handle';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
+import { useSelector } from 'react-redux';
+import { css } from 'styled-system/css';
+
+import { variableCollectionsSelectors } from '~/features/variable-collections/variable-collections.slice';
+import { RootState } from '~/store';
+
+import { ResizeHandle } from '../resize-handle';
 
 export const Root = () => {
+  const collections = useSelector((state: RootState) => {
+    return variableCollectionsSelectors.selectAll(state.variableCollections);
+  });
+
   return (
     <>
       <div
@@ -27,23 +36,9 @@ export const Root = () => {
                 padding: 'large',
               })}
             >
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
-              <div>Content</div>
+              {collections.map((collection) => {
+                return <div key={collection.id}>{collection.name}</div>;
+              })}
             </div>
           </ScrollArea.Viewport>
           <ScrollArea.Scrollbar

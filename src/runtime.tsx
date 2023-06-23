@@ -1,5 +1,10 @@
 import { createContext, useContext } from 'react';
 
+import { variableCollectionsSlice } from './features/variable-collections/variable-collections.slice';
+import { variablesSlice } from './features/variables/variables.slice';
+import { pluginMessageSchema } from './messages';
+import { store } from './store';
+
 export class Runtime {
   constructor() {
     this._handleMessage = this._handleMessage.bind(this);
@@ -8,7 +13,36 @@ export class Runtime {
   }
 
   private _handleMessage(event: MessageEvent) {
-    console.log(event.data);
+    if (!('pluginMessage' in event.data)) {
+      return;
+    }
+
+    const result = pluginMessageSchema.safeParse(event.data.pluginMessage);
+
+    if (!result.success) {
+      console.error('Invalid message received from plugin');
+      console.error(result.error);
+      console.error(event.data);
+      return;
+    }
+
+    const message = result.data;
+
+    switch (message.type) {
+      case 'init':
+        store.dispatch(
+          variablesSlice.actions.variablesReceived({
+            variables: message.localVariables,
+          })
+        );
+
+        store.dispatch(
+          variableCollectionsSlice.actions.variableCollectionsReceived({
+            variableCollections: message.localCollections,
+          })
+        );
+        break;
+    }
   }
 
   destroy() {
@@ -27,6 +61,8 @@ export class Runtime {
     );
   }
 }
+
+export const runtime = new Runtime();
 
 export const context = createContext<Runtime | null>(null);
 
