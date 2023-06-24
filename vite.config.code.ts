@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+
 import packageJson from './package.json';
 
 const config = defineConfig(({ mode }) => {
@@ -8,7 +9,7 @@ const config = defineConfig(({ mode }) => {
       outDir: 'plugin/code',
       minify: !isDev,
       watch: isDev ? {} : null,
-      sourcemap: isDev,
+      sourcemap: isDev ? 'inline' : false,
       target: 'es6',
       lib: {
         entry: './src/code.ts',

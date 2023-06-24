@@ -1,6 +1,7 @@
 import { Notches } from '@phosphor-icons/react';
 import { useRef } from 'react';
 import { css } from 'styled-system/css';
+
 import { useRuntime } from '~/runtime';
 
 export type ResizeHandleProps = {
@@ -30,6 +31,10 @@ export const ResizeHandle = (props: ResizeHandleProps) => {
         bottom: '0',
         right: '0',
         cursor: 'se-resize',
+        color: 'figma.icon.tertiary',
+        '&:hover': {
+          color: 'figma.icon.tertiary.hover',
+        },
       })}
       onPointerDown={(event) => {
         pointerDownPosition.current = {

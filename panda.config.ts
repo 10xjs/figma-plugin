@@ -218,12 +218,23 @@ const baseSizes = {
   xxxxLarge: { value: '64px' },
 };
 
-export default defineConfig({
+const textSizes = {
+  xSmall: { font: '12px', line: '16px' },
+  small: { font: '14px', line: '20px' },
+  base: { font: '16px', line: '24px' },
+  medium: { font: '20px', line: '28px' },
+  large: { font: '24px', line: '32px' },
+  xLarge: { font: '32px', line: '40px' },
+};
+
+const config = defineConfig({
   // Whether to use css reset
   preflight: true,
 
   // Where to look for your css declarations
   include: ['./src/**/*.{js,jsx,ts,tsx}'],
+
+  minify: true,
 
   // Files to exclude
   exclude: [],
@@ -231,6 +242,16 @@ export default defineConfig({
   // Useful for theme customization
   theme: {
     tokens: {
+      fontSizes: Object.fromEntries(
+        Object.entries(textSizes).map(([key, value]) => {
+          return [key, { value: value.font, type: 'fontSize' }];
+        })
+      ),
+      lineHeights: Object.fromEntries(
+        Object.entries(textSizes).map(([key, value]) => {
+          return [key, { value: value.line, type: 'lineHeight' }];
+        })
+      ),
       spacing: {
         ...baseSizes,
       },
@@ -240,13 +261,7 @@ export default defineConfig({
         scrollbar: { value: '10px' },
       },
       radii: {
-        default: { value: '2px' },
-        button: { value: '2px' },
-        input: { value: '2px' },
-        contextMenu: { value: '2px' },
-        contexttMenuItem: { value: '2px' },
-        card: { value: '4px' },
-        badge: { value: '4px' },
+        ...baseSizes,
         full: { value: '9999px' },
       },
       shadows: {
@@ -257,6 +272,16 @@ export default defineConfig({
         contextMenu: {
           value:
             'var(--shadow-context-menu, 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2))',
+        },
+      },
+      animations: {
+        accordion: {
+          slideDown: {
+            value: 'accordionSlideDown 300ms cubic-bezier(0.87, 0, 0.13, 1)',
+          },
+          slideUp: {
+            value: 'accordionSlideUp 300ms cubic-bezier(0.87, 0, 0.13, 1)',
+          },
         },
       },
     },
@@ -290,6 +315,29 @@ export default defineConfig({
         },
       },
     },
+    textStyles: Object.fromEntries(
+      Object.keys(textSizes).map((key) => {
+        return [
+          key,
+          {
+            value: {
+              fontSize: `token(fontSizes.${key})`,
+              lineHeight: `token(lineHeights.${key})`,
+            },
+          },
+        ];
+      })
+    ),
+    keyframes: {
+      accordionSlideDown: {
+        from: { height: 0 },
+        to: { height: 'var(--radix-accordion-content-height)' },
+      },
+      accordionSlideUp: {
+        from: { height: 'var(--radix-accordion-content-height)' },
+        to: { height: 0 },
+      },
+    },
   },
 
   // The output directory for your css system
@@ -299,7 +347,7 @@ export default defineConfig({
     html: {
       bg: 'figma.bg',
       color: 'figma.text',
-      lineHeight: '24px',
+      textStyle: 'base',
       height: '100%',
       overflow: 'hidden',
     },
@@ -308,6 +356,10 @@ export default defineConfig({
       height: '100%',
       gridTemplateRows: '100%',
     },
+    "button,[type='button'],[type='reset'],[type='submit']": {
+      color: 'inherit',
+      font: 'inherit',
+    },
   }),
 
   conditions: {
@@ -315,3 +367,5 @@ export default defineConfig({
     dark: '.figma-dark &',
   },
 });
+
+export default config;

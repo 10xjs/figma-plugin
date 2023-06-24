@@ -1,5 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import {
+  createEntityAdapter,
+  createSlice,
+  prepareAutoBatched,
+} from '@reduxjs/toolkit';
 
 import { Variable } from '~/schema';
 
@@ -9,13 +13,12 @@ export const variablesSlice = createSlice({
   name: 'variables',
   initialState: variablesAdapter.getInitialState(),
   reducers: {
-    variablesReceived: (
-      state,
-      action: PayloadAction<{
-        variables: Variable[];
-      }>
-    ) => {
-      variablesAdapter.setMany(state, action.payload.variables);
+    variablesReceived: {
+      reducer: (state, action: PayloadAction<{ variables: Variable[] }>) => {
+        variablesAdapter.setMany(state, action.payload.variables);
+      },
+
+      prepare: prepareAutoBatched<{ variables: Variable[] }>(),
     },
   },
 });

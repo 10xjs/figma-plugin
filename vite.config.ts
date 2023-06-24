@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import reactPlugin from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -11,7 +11,7 @@ const config = defineConfig(({ mode }) => {
       outDir: 'plugin/ui',
       minify: !isDev,
       watch: isDev ? {} : null,
-      sourcemap: isDev,
+      sourcemap: isDev ? 'inline' : false,
       cssCodeSplit: false,
       assetsInlineLimit: 100000000,
       rollupOptions: {
