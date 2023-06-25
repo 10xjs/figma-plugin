@@ -1,6 +1,48 @@
 import { defineConfig, defineGlobalStyles } from '@pandacss/dev';
 import { Tokens } from '@pandacss/types';
 
+import {
+  checkboxIconRecipe,
+  checkboxIndiciatorRecipe,
+  checkboxRecipe,
+} from '~/components/checkbox/checkbox.recipes';
+import { resizeHandleRecipe } from '~/components/resize-handle/resize-handle.recipe';
+import {
+  scrollAreaScrollBarRecipe,
+  scrollAreaThumbRecipe,
+  scrollAreaViewportRecipe,
+} from '~/components/scroll-area/scroll-area.recipe';
+import {
+  sidebarAccordionContentRecipe,
+  sidebarAccordionHeaderRecipe,
+  sidebarAccordionIconRecipe,
+  sidebarAccordionItemRecipe,
+  sidebarAccordionLabelRecipe,
+  sidebarAccordionTriggerRecipe,
+} from '~/components/sidebar-accordion/sidebar-accordion.recipe';
+import {
+  sidebarButtonEndContentRecipe,
+  sidebarButtonRecipe,
+} from '~/components/sidebar-button/sidebar-button.recipe';
+
+const recipes = {
+  checkbox: checkboxRecipe,
+  checkboxIcon: checkboxIconRecipe,
+  checkboxIndiciator: checkboxIndiciatorRecipe,
+  resizeHandle: resizeHandleRecipe,
+  scrollAreaScrollBar: scrollAreaScrollBarRecipe,
+  scrollAreaThumb: scrollAreaThumbRecipe,
+  scrollAreaViewport: scrollAreaViewportRecipe,
+  sidebarAccordionContent: sidebarAccordionContentRecipe,
+  sidebarAccordionHeader: sidebarAccordionHeaderRecipe,
+  sidebarAccordionIcon: sidebarAccordionIconRecipe,
+  sidebarAccordionItem: sidebarAccordionItemRecipe,
+  sidebarAccordionLabel: sidebarAccordionLabelRecipe,
+  sidebarAccordionTrigger: sidebarAccordionTriggerRecipe,
+  sidebarButton: sidebarButtonRecipe,
+  sidebarButtonEndContent: sidebarButtonEndContentRecipe,
+};
+
 const figmaColors = [
   '--figma-color-bg',
   '--figma-color-bg-brand',
@@ -338,10 +380,8 @@ const config = defineConfig({
         to: { height: 0 },
       },
     },
+    recipes: recipes as any,
   },
-
-  // The output directory for your css system
-  outdir: 'styled-system',
 
   globalCss: defineGlobalStyles({
     html: {
@@ -366,6 +406,10 @@ const config = defineConfig({
     light: '.figma-light &',
     dark: '.figma-dark &',
   },
+
+  // The output directory for your css system
+  outdir: 'styled-system',
+  // hash: { className: true, cssVar: false },
 });
 
 export default config;

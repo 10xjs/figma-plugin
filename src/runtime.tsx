@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 
 import { variableCollectionsSlice } from './features/variable-collections/variable-collections.slice';
 import { variablesSlice } from './features/variables/variables.slice';
-import { pluginMessageSchema } from './messages';
+import { NotifyOptions, pluginMessageSchema } from './messages';
 import { store } from './store';
 
 export class Runtime {
@@ -59,6 +59,43 @@ export class Runtime {
       },
       '*'
     );
+  }
+
+  notify(message: string, options?: NotifyOptions) {
+    window.parent.postMessage(
+      {
+        pluginMessage: {
+          type: 'notify',
+          message,
+          options,
+        },
+      },
+      '*'
+    );
+  }
+
+  copyTokens() {
+    const { variableCollections, variables } = store.getState();
+
+    const data = {
+      variableCollections: variableCollections.entities,
+      variables: variables.entities,
+    };
+
+    const textarea = document.createElement('textarea');
+    textarea.style.position = 'fixed';
+    textarea.style.top = '0';
+    textarea.style.left = '0';
+    textarea.style.opacity = '0';
+
+    document.body.appendChild(textarea);
+
+    textarea.value = JSON.stringify(data, null, 2);
+    textarea.select();
+
+    document.execCommand('copy');
+
+    this.notify('Variables copied to clipboard');
   }
 }
 

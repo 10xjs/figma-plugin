@@ -3,7 +3,9 @@ import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { VariableCollection } from '~/schema';
 
-const variableCollectionsAdapter = createEntityAdapter<VariableCollection>();
+const variableCollectionsAdapter = createEntityAdapter<VariableCollection>({
+  sortComparer: (a, b) => a.name.localeCompare(b.name),
+});
 
 export const variableCollectionsSlice = createSlice({
   name: 'variableCollections',

@@ -1,6 +1,6 @@
 import { Notches } from '@phosphor-icons/react';
 import { useRef } from 'react';
-import { css } from 'styled-system/css';
+import { resizeHandle } from 'styled-system/recipes';
 
 import { useRuntime } from '~/runtime';
 
@@ -25,21 +25,13 @@ export const ResizeHandle = (props: ResizeHandleProps) => {
   return (
     <Notches
       aria-hidden
-      size={16}
-      className={css({
-        position: 'fixed',
-        bottom: '0',
-        right: '0',
-        cursor: 'se-resize',
-        color: 'figma.icon.tertiary',
-        '&:hover': {
-          color: 'figma.icon.tertiary.hover',
-        },
-      })}
+      className={resizeHandle()}
       onPointerDown={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+
         pointerDownPosition.current = {
-          x: event.nativeEvent.offsetX,
-          y: event.nativeEvent.offsetY,
+          x: event.nativeEvent.offsetX - rect.width,
+          y: event.nativeEvent.offsetY - rect.height,
         };
         event.currentTarget.setPointerCapture(event.pointerId);
       }}
@@ -55,20 +47,14 @@ export const ResizeHandle = (props: ResizeHandleProps) => {
         const width = Math.round(
           Math.max(
             minWidth,
-            Math.min(
-              maxWidth,
-              event.clientX + 16 - pointerDownPosition.current.x
-            )
+            Math.min(maxWidth, event.clientX - pointerDownPosition.current.x)
           )
         );
 
         const height = Math.round(
           Math.max(
             minHeight,
-            Math.min(
-              maxHeight,
-              event.clientY + 16 - pointerDownPosition.current.y
-            )
+            Math.min(maxHeight, event.clientY - pointerDownPosition.current.y)
           )
         );
 

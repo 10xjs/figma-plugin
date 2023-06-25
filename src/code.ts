@@ -2,8 +2,6 @@
 
 import { uiMessageSchema } from './messages';
 
-figma.showUI(__html__, { themeColors: true });
-
 figma.ui.onmessage = (rawMessage: unknown) => {
   const result = uiMessageSchema.safeParse(rawMessage);
 
@@ -21,13 +19,47 @@ figma.ui.onmessage = (rawMessage: unknown) => {
       figma.ui.resize(width, height);
       figma.clientStorage.setAsync('size', { width, height });
       break;
+    case 'notify': {
+      message;
+
+      const options: NotificationOptions = {
+        timeout: message.options?.timeout,
+        error: message.options?.error,
+      };
+
+      const button = message.options?.button;
+
+      if (button) {
+        options.button = {
+          text: button.text,
+          action: () => {
+            switch (button.action) {
+            }
+          },
+        };
+      }
+
+      figma.notify(message.message, options);
+    }
   }
 };
+
+const DEFAULT_SIZE = { width: 600, height: 400 };
 
 async function init() {
   await figma.clientStorage.getAsync('size').then((size) => {
     if (size) {
-      figma.ui.resize(size.width, size.height);
+      figma.showUI(__html__, {
+        themeColors: true,
+        width: size.width,
+        height: size.height,
+      });
+    } else {
+      figma.showUI(__html__, {
+        width: DEFAULT_SIZE.width,
+        height: DEFAULT_SIZE.height,
+        themeColors: true,
+      });
     }
   });
 
